@@ -541,6 +541,7 @@ setInterval(() => {
 
 // Expose printer functions globally for inline HTML onclick
 window.initPrinter = initPrinter;
+window.setStatus = setStatus;
 window.testPrinterConnection = testPrinterConnection;
 window.printReceiptEpson = printReceiptEpson;
 window.printOrder = printOrder;
