@@ -275,12 +275,24 @@ function printOrder(order) {
   }
   try {
     const xmlBody = buildReceiptXML(order);
-    const xml = xmlBody;
-    const url = 'tmprintassistant://tmprintassistant.epson.com/print?ver=1&data-type=eposprintxml&data=' + encodeURIComponent(xml);
-    window.location.href = url;
-    showToast('Apertura stampa ordine #' + (order.order_number || order.id));
-    printedOrders.set(id, { status: 'pending', attempts: (existing ? existing.attempts : 0) + 1 });
-    renderOrders();
+    soapPrint(xmlBody).then(res => res.text()).then(text => {
+      const success = /success\s*=\s*"\s*(1|true)\s*"/.test(text);
+      if (success) {
+        printedOrders.set(id, { status: 'printed', attempts: (existing ? existing.attempts : 0) + 1 });
+        showToast('Ricevuta stampata');
+        renderOrders();
+      } else {
+        const codeMatch = text.match(/code\s*=\s*"\s*(\S*)\s*"/);
+        printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: codeMatch ? codeMatch[1] : 'unknown' });
+        showToast('Errore stampa ricevuta');
+        renderOrders();
+      }
+    }).catch(err => {
+      console.error('Print error:', err);
+      printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: err.message });
+      showToast('Errore connessione stampante');
+      renderOrders();
+    });
   } catch(e) {
     console.error('Print setup error:', e);
     printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: e.message });
