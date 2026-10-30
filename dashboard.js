@@ -419,7 +419,7 @@ function renderOrders() {
         ${o.delivery_address ? '<span>\ud83d\udccd ' + esc(o.delivery_address) + '</span>' : ''}
         ${o.order_type === 'delivery' && o.delivery_timing ? '<span>\u23f1 Delivery: ' + esc(o.delivery_timing === 'later' ? (o.delivery_time || '') : 'Now') + '</span>' : ''}
         ${o.order_type === 'pickup' && o.pickup_time ? '<span>\u23f1 Ritiro: ' + esc(o.pickup_time) + '</span>' : ''}
-        <span>\u23f1 ' + timeAgo(o.created_at) + '</span>
+        <span>\u23f1 ${timeAgo(o.created_at)}</span>
       </div>
       ${o.notes ? '<div class="order-meta"><span>\ud83d\udcdd ' + esc(o.notes) + '</span></div>' : ''}
       <ul class="order-items">${(o.items || []).map(i => '<li>' + i.qty + '\u00d7 ' + esc(i.name) + ' <span style="float:right">\u20ac' + (i.qty * i.price).toFixed(2) + '</span></li>').join('')}</ul>
