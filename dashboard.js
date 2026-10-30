@@ -266,14 +266,9 @@ function printOrder(order) {
   renderOrders();
 
   if (/Android/i.test(navigator.userAgent)) {
-    try {
-      const xmlBody = buildReceiptXML(order);
-      soapPrint(xmlBody).then(res => res.text()).then(text => {
-        const success = /success\s*=\s*"\s*(1|true)\s*"/.test(text);
-        if (success) { showToast('Ricevuta stampata'); }
-        else { showToast('Errore stampa ricevuta'); }
-      }).catch(() => showToast('Errore connessione stampante'));
-    } catch (e) { showToast('Errore preparazione stampa'); }
+    const xml = buildReceiptXML(order);
+    window.location.href = 'tmprintassistant://tmprintassistant.epson.com/print?ver=1&data-type=eposprintxml&data=' + encodeURIComponent(xml);
+    showToast('Apertura TM Print Assistant...');
     return;
     showToast('Stampa avviata');
     return;
