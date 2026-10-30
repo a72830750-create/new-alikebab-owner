@@ -266,13 +266,21 @@ function printOrder(order) {
   renderOrders();
 
   if (/Android/i.test(navigator.userAgent)) {
-    const w = window.open('', '_blank');
-    if (w) {
-      w.document.write('<pre style="font-family:monospace;font-size:12px;">' + buildReceiptXML(order).replace(/<[^>]+>/g, '\n').trim() + '</pre>');
-      w.document.close();
-      w.focus();
-      w.print();
-    }
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write('<pre style="font-family:monospace;font-size:12px;">' + buildReceiptXML(order).replace(/<[^>]+>/g, '\n').trim() + '</pre>');
+    doc.close();
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    setTimeout(() => document.body.removeChild(iframe), 1000);
     showToast('Stampa avviata');
     return;
   }
