@@ -343,3 +343,27 @@ body {
 .printer-settings-modal .modal-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
 .printer-settings-modal .modal-textarea { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; background: var(--input-bg); color: var(--text); }
 .printer-settings-modal .btn-primary.btn-sm { padding: 8px 16px; font-size: 13px; }
+
+/* ===== Mobile app layout ===== */
+@media (max-width: 640px) {
+  html, body { overflow-x: hidden; }
+  body { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  .topbar { padding: 8px 10px; gap: 8px; }
+  .topbar-actions { gap: 6px; }
+  .btn { min-height: 44px; padding: 10px 12px; font-size: 15px; }
+  .btn-sm { min-height: 40px; padding: 8px 10px; font-size: 14px; }
+  input, select, textarea { font-size: 16px; }
+  .order-card { margin: 8px 0; border-radius: 12px; }
+  .order-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .order-actions .btn { flex: 1 1 45%; }
+  .modal { width: 92vw; max-width: 92vw; border-radius: 16px; }
+  .modal-body { max-height: 70vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .filter-tabs, .earnings-tabs { gap: 6px; overflow-x: auto; flex-wrap: nowrap; }
+  .order-meta { flex-wrap: wrap; gap: 4px; }
+  .order-items li { font-size: 14px; }
+}
+/* Safe areas */
+@supports (padding: max(0px)) {
+  .topbar { padding-top: max(8px, env(safe-area-inset-top)); }
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
