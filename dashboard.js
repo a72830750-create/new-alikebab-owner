@@ -255,49 +255,12 @@ function testPrinterConnection() {
 }
 
 function printOrder(order) {
-  const id = String(order.id);
-  const existing = printedOrders.get(id);
-  if (existing && existing.status === 'printed') {
-    showToast('Ordine gi\u00e0 stampato');
-    return;
-  }
-
-  printedOrders.set(id, { status: 'pending', attempts: (existing ? existing.attempts : 0) + 1 });
-  renderOrders();
-
-  if (/Android/i.test(navigator.userAgent)) {
-  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-    showToast('Stampa disponibile solo su PC');
-    return;
-  }
-    showToast('Stampa avviata');
-    return;
-  }
-  try {
-    const xmlBody = buildReceiptXML(order);
-    soapPrint(xmlBody).then(res => res.text()).then(text => {
-      const success = /success\s*=\s*"\s*(1|true)\s*"/.test(text);
-      if (success) {
-        printedOrders.set(id, { status: 'printed', attempts: (existing ? existing.attempts : 0) + 1 });
-        showToast('Ricevuta stampata');
-        renderOrders();
-      } else {
-        const codeMatch = text.match(/code\s*=\s*"\s*(\S*)\s*"/);
-        printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: codeMatch ? codeMatch[1] : 'unknown' });
-        showToast('Errore stampa ricevuta');
-        renderOrders();
-      }
-    }).catch(err => {
-      console.error('Print error:', err);
-      printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: err.message });
-      showToast('Errore connessione stampante');
-      renderOrders();
-    });
-  } catch(e) {
-    console.error('Print setup error:', e);
-    printedOrders.set(id, { status: 'failed', attempts: (existing ? existing.attempts : 0) + 1, error: e.message });
-    showToast('Errore preparazione stampa');
-    renderOrders();
+  const w = window.open('', '_blank');
+  if (w) {
+    w.document.write('<pre style="font-family:monospace;font-size:12px;">' + buildReceiptXML(order).replace(/<[^>]+>/g, '\n').trim() + '</pre>');
+    w.document.close();
+    w.focus();
+    w.print();
   }
 }
 
