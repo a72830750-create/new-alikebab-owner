@@ -266,21 +266,15 @@ function printOrder(order) {
   renderOrders();
 
   if (/Android/i.test(navigator.userAgent)) {
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
-    document.body.appendChild(iframe);
-    const doc = iframe.contentWindow.document;
-    doc.open();
-    doc.write('<pre style="font-family:monospace;font-size:12px;">' + buildReceiptXML(order).replace(/<[^>]+>/g, '\n').trim() + '</pre>');
-    doc.close();
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-    setTimeout(() => document.body.removeChild(iframe), 1000);
+    try {
+      const xmlBody = buildReceiptXML(order);
+      soapPrint(xmlBody).then(res => res.text()).then(text => {
+        const success = /success\s*=\s*"\s*(1|true)\s*"/.test(text);
+        if (success) { showToast('Ricevuta stampata'); }
+        else { showToast('Errore stampa ricevuta'); }
+      }).catch(() => showToast('Errore connessione stampante'));
+    } catch (e) { showToast('Errore preparazione stampa'); }
+    return;
     showToast('Stampa avviata');
     return;
   }
