@@ -54,7 +54,7 @@ const server = http.createServer((req,res)=>{
     let body=''; req.on('data',c=>body+=c); req.on('end',()=>{
       try {
         const {username,password}=JSON.parse(body);
-        if (username === 'faridkebab' && verifyPassword(password)) {
+        if (username === 'alikebab' && verifyPassword(password)) {
           const token = makeToken();
           res.setHeader('Content-Type','application/json');
           res.end(JSON.stringify({token}));

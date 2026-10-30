@@ -185,7 +185,7 @@ function buildReceiptXML(order) {
   const note = order.notes ? `<text>${esc(order.notes)}</text><feed />` : '';
   const pickupTime = order.order_type === 'pickup' ? (order.pickup_time || 'ASAP') : (order.delivery_timing === 'later' ? (order.delivery_time || 'ASAP') : 'ASAP');
   return `<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
-    <text align="center">FARID KEBABBARO</text>
+    <text align="center">ALI KEBAB</text>
     <text align="center">Via Leopoldo Galeotti</text>
     <text align="center">51017 Pescia PT</text>
     <feed />
